@@ -13,9 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      # Step 1: Clone the specified repository
+      - name: Clone Repository
+        run: |
+          git clone https://github.com/svprasanth/analystvivek.git
+          cd analystvivek
 
       # Step 2: Set up Python 3.13
       - name: Set up Python
@@ -26,6 +28,7 @@ jobs:
       # Step 3: Install Python dependencies
       - name: Install Dependencies
         run: |
+          cd analystvivek
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
@@ -44,4 +47,5 @@ jobs:
       # Step 6: Execute the Streamlit App
       - name: Run Streamlit App
         run: |
+          cd analystvivek
           streamlit run apps.py --server.headless true --server.port 8501
