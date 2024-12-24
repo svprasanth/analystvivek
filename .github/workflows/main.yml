@@ -17,11 +17,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python 3.13 environment
+      # Step 2: Set up Python 3.13
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.13  # Specify Python 3.13
+          python-version: 3.13
 
       # Step 3: Install Python dependencies
       - name: Install Dependencies
@@ -29,17 +29,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Step 4: Install and Run Ollama
-      - name: Install and Run Ollama
+      # Step 4: Verify and Install Ollama
+      - name: Install Ollama
         run: |
-          curl -sSL https://ollama.ai/install | bash
-          ollama pull llama3.2-vision
+          curl -sSL https://ollama.ai/install -o ollama-install.sh
+          chmod +x ollama-install.sh
+          ./ollama-install.sh || echo "Failed to install Ollama. Check the installer URL or dependencies."
 
-      # Step 5: Execute Streamlit App
+      # Step 5: Pull the Llama3.2-Vision model
+      - name: Pull Llama Model
+        run: |
+          ollama pull llama3.2-vision || echo "Failed to pull model. Ensure Ollama is installed correctly."
+
+      # Step 6: Execute the Streamlit App
       - name: Run Streamlit App
         run: |
           streamlit run apps.py --server.headless true --server.port 8501
-
-      # Step 6: Deploy to Streamlit Cloud (Optional Step)
-      # Streamlit Cloud automatically deploys from the repository when changes are pushed.
-      # If you'd prefer manual deployment, you can configure it directly at https://streamlit.io/cloud.
